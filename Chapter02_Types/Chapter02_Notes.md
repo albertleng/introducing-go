@@ -34,3 +34,11 @@ Some common operations on strings:
   `len("Hello World")`
   `"Hello, World"[1]`
   `"Hello, " + "World"`
+
+
+### Booleans
+A boolean value is a special 1-bit integer type used to represent true and false (or on and off). Three logical operations are used with boolean values:  
+
+&& and  
+|| or  
+! not  
