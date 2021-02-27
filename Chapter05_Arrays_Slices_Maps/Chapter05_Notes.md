@@ -29,6 +29,45 @@ Another way to create slices is to use the `[low : high]` expression:
 arr := [5]float64{1, 2, 3, 4, 5}
 x := arr[0:5]
 ```
-`low` is the index of where to start the slice and `high` is the index of where to end it (but not including the index itself).
+`low` is the index of where to start the slice and `high` is the index of where to end it (but not including the index itself).  
+
+Go includes two built-in functions to assist with slices: `append` and `copy`.
+
+#### append
+`append` adds elements onto the end of a slice. 
+
+#### copy
+`copy` takes two arguments: `dst` and `src`. All of the entries in `src` are copied into `dst` overwriting whatever is there.
 
 ### Maps
+A `map` is an unordered collection of key-value pairs (maps are also sometimes called associative arrays, hash tables, or dictionaries). Maps are used to look up a value by its associated key. Example:
+```go
+var x map[string]int
+```
+*"x is a map of strings to ints."*
+
+```go
+name, ok := elements["Un"]
+fmt.Println(name, ok)
+```
+Accessing an element of a map can return two values instead of just one. The first value is the result of the lookup, the second tells us whether or not the lookup was successful. In Go, we often see code like this:  
+```go
+if name, ok := elements["Un"]; ok {
+	fmt.Println(name, ok)
+}
+```
+Like we saw with arrays, there is also a shorter way to create maps:
+```go
+elements := map[string]string {
+	"H": "Hydrogen",
+	"He": "Helium",
+	"Li": "Lithium",
+	"Be": "Beryllium",
+	"B": "Boron",
+	"C": "Carbon",
+	"N": "Nitrogen",
+	"O": "Oxygen",
+	"F": "Flourine",
+	"Ne": "Neon",
+}
+```
