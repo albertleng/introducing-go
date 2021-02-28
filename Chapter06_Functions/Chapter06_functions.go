@@ -38,7 +38,31 @@ func main() {
 	/*
 	Recursion
 	 */
-	fmt.Println(factorial(2))
+	//fmt.Println(factorial(2))
+
+	/*
+	defer, panic, and recover
+	 */
+	//defer second()
+	//first()
+
+	/*
+	panic and recover
+	 */
+	defer func() {
+		str := recover()
+		fmt.Println(str)
+	}()
+	panic("PANIC")
+
+}
+
+func first() {
+	fmt.Println("1st")
+}
+
+func second() {
+	fmt.Println("2nd")
 }
 
 func factorial(x uint) uint {
