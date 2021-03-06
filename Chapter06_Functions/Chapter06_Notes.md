@@ -45,3 +45,20 @@ defer f.Close()
 - We can handle a runtime panic with the built-in `recover` function. `recover` stops the panic and returns the value that was passed to the call to `panic`. 
 - We have to pair it with `defer`.
 - A `panic` generally indicates a programmer error (e.g., attempting to access an index of an array that's out of bounds, forgetting to initialize a map, etc.) or an exceptional condition that's no easy way to recover from (hence the name *panic*).
+
+### Pointers
+Pointers reference a location in memory where a value is stored rather than the value itself.
+
+### The * and & operators
+In Go, a pointer is represented using an asterisk (`x`) followed by the type of the stored value.  
+
+An asterisk is also used to *dereference* pointer variables. Dereferencing a pointer gives us access to the value the pointer points to. When we write `*xPtr = 0`, we are saying "store the `int 0` in the memory location `xPtr` refers to." If we try `xPtr = 0` instead, we will get a compile-time error because `xPtr` is not an `int`; it's a `*int`. which can only be given another `*int`.  
+
+Finally, we use the `&` operator to find the address of a variable, `&x` returns a `*int` (pointer to an int) because x is an int. 
+
+### new
+`new` takes a type as an argument, allocates enough memory to fit a value of that type, and returns a pointer to it.  
+
+In some programming languages, there is a significant difference between using `new` and `&`, with great care being needed to eventually delete anything created with `new`. You don't have to worry about this with Go - it's a garbage collected programming language, which means memory is cleaned up automatically when nothing refers to it anymore.  
+
+Pointers are rarely used with Go's built-in types, they are extremely useful when paired with structs.
