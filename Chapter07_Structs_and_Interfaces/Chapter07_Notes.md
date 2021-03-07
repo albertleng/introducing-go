@@ -64,3 +64,39 @@ In between the keyword `func` and the name of the function, we've added a *recei
 ```go
 fmt.Pritln(c.area())
 ```
+### Interfaces
+```go
+type Shape interface {
+	area() float64
+}
+```
+Like a struct, an interface is created using the `type` keyword, followed by a name and the keyword `interface`. But instead of defining fields, we define a *method set*. A method set is a list of methods that a type must have in order to *implement* the interface.  
+
+Both `Rectangle` and `Circle` have area methods that return `float64`s, so both types implement the `Shape` interface. By itself, this wouldn't be particularly useful, but we can use interface types as arguments to functions.  
+
+This is the problem interfaces are designed to solve. Because both of our shapes have an `area` method, they both implement the `Shape` interface and we can change our function to this:  
+
+```go
+func totalArea(shapes ...Shape) float64 {
+	var area float64
+	for _, s := range shapes {
+        area += s.area()
+    }
+    return area
+}
+```
+We would call this function like this:  
+```go
+fmt.Println(totalArea(&c, &r))
+```
+All `totalArea` knows about each shape is that it has an `area` method:  
+```go
+type Shape interface {
+	area() float64
+}
+```
+In Go, you generally focus more on the behavior of your program than on a taxonomy of types. Create a few small structs that do what you want, add in methods that you need, and as you build your programs, useful interfaces will tend to emerge. There's no need to have them all figured out ahead of time.  
+
+Interfaces are particularly useful as software projects grow and become more complex. They allow us to hide the incidental details of implementations (e.g., the fields of our struct), which makes it easier to reason about software components in isolation.  
+
+Go also has a mechanism for combining interfaces, types, variables, and functions together into a single component known as a *package*.
