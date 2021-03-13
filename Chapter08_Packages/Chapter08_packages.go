@@ -1,8 +1,12 @@
 package main
 
 import (
+	"encoding/gob"
 	"fmt"
 	"hash/crc32"
+	"io"
+	"net"
+	"os"
 )
 
 func main() {
@@ -125,14 +129,128 @@ func main() {
 //	Non-cryptography
 
 	// create a hasher
-	h := crc32.NewIEEE()
-	// write our data to it
-	h.Write([]byte("test"))
-	// calculate the crc32 checksum
-	v := h.Sum32()
-	fmt.Println(v)
+	//h := crc32.NewIEEE()
+	//// write our data to it
+	//h.Write([]byte("test"))
+	//// calculate the crc32 checksum
+	//v := h.Sum32()
+	//fmt.Println(v)
+
+	//h1, err := getHash("test1.txt")
+	//if err != nil {
+	//	return
+	//}
+	//h2, err := getHash("test2.txt")
+	//if err != nil {
+	//	return
+	//}
+	//fmt.Println(h1, h2, h1 == h2)
+
+	// Cryptographic hash function - SHA-1
+//	Hard to reverse
+//	h := sha1.New()
+//	h.Write([]byte("test"))
+//	bs := h.Sum([]byte{})
+//	fmt.Println(bs)
+
+
+	// Servers
+	go server()
+	go client()
+
+	var input string
+	fmt.Scanln(&input)
+
+	//HTTP
+
 
 }
+
+//type Listener interface {
+//	// Accept waits for and returns the next connection to the listener.
+//	Accept() (c Conn, err error)
+//
+//	// Close closes the listener.
+//	// Any blocked Accept operations will be unblocked and return errors.
+//	Close() error
+//
+//	// Addr returns the listener's network address.
+//	Addr() Addr
+//}
+
+func server() {
+	//listen on a port
+	ln, err := net.Listen("tcp", ":9998")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	for {
+		// accept a connection
+		c, err := ln.Accept()
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+		// handle the connection
+		go handleServerConnection(c)
+	}
+}
+
+func handleServerConnection(c net.Conn) {
+	// receive the message
+	var msg string
+	err := gob.NewDecoder(c).Decode(&msg)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println("Received", msg)
+	}
+	c.Close()
+}
+
+func client() {
+	// connect to the server
+	c, err := net.Dial("tcp", "127.0.0.1:9998")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	// send the message
+	msg := "Hello, World"
+	fmt.Println("Sending", msg)
+	err = gob.NewEncoder(c).Encode(msg)
+	if err != nil {
+		fmt.Println(err)
+	}
+	c.Close()
+}
+
+
+func getHash(filename string) (uint32, error) {
+	//open the file
+	f, err := os.Open(filename)
+	if err != nil {
+		return 0, err
+	}
+	//remember to always close opened files
+	defer f.Close()
+
+	//create a hasher
+	h := crc32.NewIEEE()
+	//copy the file into the hasher
+	//- copy takes (dst, src) and returns (bytesWritten, error)
+	_, err = io.Copy(h, f)
+	// we don't care about how many bytes are written, but we do want to
+	// handle the error
+	if err != nil {
+		return 0, err
+	}
+	return h.Sum32(), nil
+}
+
+
 type Person struct {
 	Name string
 	Age int
