@@ -6,6 +6,7 @@ import (
 	"hash/crc32"
 	"io"
 	"net"
+	"net/http"
 	"os"
 )
 
@@ -155,15 +156,37 @@ func main() {
 
 
 	// Servers
-	go server()
-	go client()
-
-	var input string
-	fmt.Scanln(&input)
+	//go server()
+	//go client()
+	//
+	//var input string
+	//fmt.Scanln(&input)
 
 	//HTTP
+	//http.HandleFunc("/hello", hello)
+	//http.ListenAndServe(":9000", nil)
 
+	//rpc
 
+}
+
+func hello(res http.ResponseWriter, req *http.Request) {
+	res.Header().Set(
+		"Content-Type",
+		"text/html",
+		)
+	io.WriteString(
+		res,
+		`<DOCTYPE html>
+			<html>
+				<head>
+					<title>Hello, World</title>
+				</head>
+				<body>
+					Hello, World!
+				</body>
+			</html>`,
+	)
 }
 
 //type Listener interface {
